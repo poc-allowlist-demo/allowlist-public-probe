@@ -1,0 +1,7 @@
+name: allowlist-poc-action
+description: Stand-in for a BrowserStack action that customers use
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: echo "allowlist-poc-action ran on $RUNNER_OS from $(curl -s https://api.ipify.org)"
