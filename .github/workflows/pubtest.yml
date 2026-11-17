@@ -1,0 +1,19 @@
+name: public-repo-token-test
+on: workflow_dispatch
+permissions:
+  contents: write
+  issues: write
+jobs:
+  t:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "runner ip $(curl -s https://api.ipify.org)"
+      - uses: actions/checkout@v4
+      - name: read with GITHUB_TOKEN
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: gh api repos/${{ github.repository }} --jq .full_name
+      - name: write issue with GITHUB_TOKEN
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: gh api repos/${{ github.repository }}/issues -f title="token test $(date -u +%FT%TZ)" --jq .number
+      - name: push tag with GITHUB_TOKEN
+        run: git tag "t-$(date +%s)" && git push origin --tags
